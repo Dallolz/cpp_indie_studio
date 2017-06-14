@@ -9,8 +9,9 @@
     Set the skin transparency by changing the alpha values of all skin-colors
 */
 
-CreateGame::CreateGame(IrrlichtDevice *device,  std::stack<IScene *> *stack) { 
+CreateGame::CreateGame(IrrlichtDevice *device, ISoundEngine *sound, std::stack<IScene *> *stack) { 
 	this->device = device;
+    this->soundEngine = sound;
     this->sceneManager = this->device->getSceneManager();
 	this->guiEnv = this->device->getGUIEnvironment();
 	this->driver = this->device->getVideoDriver();
@@ -24,12 +25,14 @@ IrrlichtDevice  *CreateGame::getDevice(void) { return (this->device); }
 ISceneManager	*CreateGame::getSceneManager(void) { return (this->sceneManager); }
 IGUIEnvironment	*CreateGame::getGUIEnv(void) { return (this->guiEnv); }
 IVideoDriver	*CreateGame::getDriver(void) { return (this->driver); }
+ISoundEngine    *CreateGame::getSoundEngine(void) { return (this->soundEngine); }
 CGEventReceiver  *CreateGame::getEventReceiver(void) { return (this->eventReceiver); }
 
 void            CreateGame::setDevice(IrrlichtDevice *arg) { this->device = arg; }
 void 			CreateGame::setSceneManager(ISceneManager *arg) { this->sceneManager = arg; }
 void 			CreateGame::setGUIEnv(IGUIEnvironment *arg) { this->guiEnv = arg; }
 void 			CreateGame::setDriver(IVideoDriver *arg) { this->driver = arg; }
+void            CreateGame::setSoundEngine(ISoundEngine *arg) { this->soundEngine = arg; }
 void            CreateGame::setEventReceiver(CGEventReceiver *arg) { this->eventReceiver = arg; }
 
 
@@ -66,9 +69,9 @@ void 	CreateGame::init(int *mapID) {
     } else
         throw std::string(strerror(ENOMEM));
 
-    Gameplay *gameplay = new Gameplay(this->device, this->scenesStack);
+    Gameplay *gameplay = new Gameplay(this->device, this->soundEngine, this->scenesStack);
 
-    this->eventReceiver = new CGEventReceiver(*context, this->device,  this->scenesStack, &this->stop, &this->charList, gameplay);
+    this->eventReceiver = new CGEventReceiver(*context, this->device, this->soundEngine, this->scenesStack, &this->stop, &this->charList, gameplay);
 
     if (this->eventReceiver)
         device->setEventReceiver(this->eventReceiver);

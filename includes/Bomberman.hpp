@@ -2,6 +2,7 @@
 # define 	__BOMBERMAN_HPP__
 
 # include	"irrlicht.h"
+# include 	"irrKlang.h"
 # include	<iostream>
 
 
@@ -17,7 +18,7 @@ using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
-//using namespace irrklang;
+using namespace irrklang;
 using namespace std;
 
 /* UTILS FUNCTIONS PROTOTYPES */

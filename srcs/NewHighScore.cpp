@@ -9,9 +9,10 @@
     Set the skin transparency by changing the alpha values of all skin-colors
 */
 
-NewHighScore::NewHighScore(IrrlichtDevice *device, std::stack<IScene *> *stack, int score) { 
+NewHighScore::NewHighScore(IrrlichtDevice *device, ISoundEngine *sound, std::stack<IScene *> *stack, int score) { 
 	this->device = device;
-	this->sceneManager = this->device->getSceneManager();
+    this->soundEngine = sound;
+    this->sceneManager = this->device->getSceneManager();
 	this->guiEnv = this->device->getGUIEnvironment();
 	this->driver = this->device->getVideoDriver();
 	this->scenesStack = stack;
@@ -25,12 +26,14 @@ IrrlichtDevice  *NewHighScore::getDevice(void) { return (this->device); }
 ISceneManager	*NewHighScore::getSceneManager(void) { return (this->sceneManager); }
 IGUIEnvironment	*NewHighScore::getGUIEnv(void) { return (this->guiEnv); }
 IVideoDriver	*NewHighScore::getDriver(void) { return (this->driver); }
+ISoundEngine    *NewHighScore::getSoundEngine(void) { return (this->soundEngine); }
 NewScoEventReceiver  *NewHighScore::getEventReceiver(void) { return (this->eventReceiver); }
 
 void            NewHighScore::setDevice(IrrlichtDevice *arg) { this->device = arg; }
 void 			NewHighScore::setSceneManager(ISceneManager *arg) { this->sceneManager = arg; }
 void 			NewHighScore::setGUIEnv(IGUIEnvironment *arg) { this->guiEnv = arg; }
 void 			NewHighScore::setDriver(IVideoDriver *arg) { this->driver = arg; }
+void            NewHighScore::setSoundEngine(ISoundEngine *arg) { this->soundEngine = arg; }
 void            NewHighScore::setEventReceiver(NewScoEventReceiver *arg) { this->eventReceiver = arg; }
 
 
@@ -46,6 +49,8 @@ void 	NewHighScore::init(int *) {
     this->sceneManager->clear();
     this->guiEnv->clear();
 
+    this->soundEngine->stopAllSounds();
+    this->soundEngine->play2D("./assets/audio/music/newhighscore.ogg", true, false, true);
 
     IGUISkin    *skin = guiEnv->getSkin();
     IGUIFont    *font = guiEnv->getFont("./assets/fonts/saber.png");
@@ -120,7 +125,7 @@ void 	NewHighScore::init(int *) {
     } else
         throw std::string(strerror(ENOMEM));
 
-    this->eventReceiver = new NewScoEventReceiver(*context, this->device, this->scenesStack, &this->stop, input, score, pseudo, id, &this->file);
+    this->eventReceiver = new NewScoEventReceiver(*context, this->device, this->soundEngine, this->scenesStack, &this->stop, input, score, pseudo, id, &this->file);
 
     if (this->eventReceiver)
         device->setEventReceiver(this->eventReceiver);
@@ -160,5 +165,6 @@ void 	NewHighScore::render(void) {
         scenesStack->pop();
         delete scenesStack->top();
         scenesStack->pop();
+        this->soundEngine->stopAllSounds();
     }
 }

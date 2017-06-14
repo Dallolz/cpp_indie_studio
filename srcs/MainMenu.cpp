@@ -9,12 +9,14 @@
     Set the skin transparency by changing the alpha values of all skin-colors
 */
 
-MainMenu::MainMenu(IrrlichtDevice *device, std::stack<IScene *> *stack) { 
+MainMenu::MainMenu(IrrlichtDevice *device, ISoundEngine *sound, std::stack<IScene *> *stack) { 
 	this->device = device;
-	this->sceneManager = this->device->getSceneManager();
+    this->soundEngine = sound;
+    this->sceneManager = this->device->getSceneManager();
 	this->guiEnv = this->device->getGUIEnvironment();
 	this->driver = this->device->getVideoDriver();
 	this->scenesStack = stack;
+    this->music_loop = NULL;
 }
 
 MainMenu::~MainMenu() { }
@@ -23,12 +25,14 @@ IrrlichtDevice  *MainMenu::getDevice(void) { return (this->device); }
 ISceneManager	*MainMenu::getSceneManager(void) { return (this->sceneManager); }
 IGUIEnvironment	*MainMenu::getGUIEnv(void) { return (this->guiEnv); }
 IVideoDriver	*MainMenu::getDriver(void) { return (this->driver); }
+ISoundEngine    *MainMenu::getSoundEngine(void) { return (this->soundEngine); }
 MyEventReceiver  *MainMenu::getEventReceiver(void) { return (this->eventReceiver); }
 
 void            MainMenu::setDevice(IrrlichtDevice *arg) { this->device = arg; }
 void 			MainMenu::setSceneManager(ISceneManager *arg) { this->sceneManager = arg; }
 void 			MainMenu::setGUIEnv(IGUIEnvironment *arg) { this->guiEnv = arg; }
 void 			MainMenu::setDriver(IVideoDriver *arg) { this->driver = arg; }
+void            MainMenu::setSoundEngine(ISoundEngine *arg) { this->soundEngine = arg; }
 void            MainMenu::setEventReceiver(MyEventReceiver *arg) { this->eventReceiver = arg; }
 
 
@@ -52,8 +56,8 @@ void 	MainMenu::init(int *mapID) {
 
     skin->setFont(guiEnv->getBuiltInFont(), EGDF_TOOLTIP);
 
-    //    if (music_loop == NULL)
-    //  this->music_loop = this->soundEngine->play2D("./assets/audio/music/mainmenu.ogg", true, false, true);
+    if (music_loop == NULL)
+        this->music_loop = this->soundEngine->play2D("./assets/audio/music/mainmenu.ogg", true, false, true);
 
     banner = driver->getTexture("./assets/images/banner.png");
     background = driver->getTexture("./assets/images/background.jpg");
@@ -75,7 +79,7 @@ void 	MainMenu::init(int *mapID) {
     else
         throw std::string(strerror(ENOMEM));
 
-    this->eventReceiver = new MyEventReceiver(*context, device, scenesStack);
+    this->eventReceiver = new MyEventReceiver(*context, device, soundEngine, scenesStack, music_loop);
 
     if (this->eventReceiver)
         device->setEventReceiver(this->eventReceiver);

@@ -25,6 +25,7 @@ private:
 	IScene				*oldScene;
 	std::stack<IScene *> scenesStack;
 	IrrlichtDevice		*device;
+	ISoundEngine		*soundEngine;
 };
 
 #endif

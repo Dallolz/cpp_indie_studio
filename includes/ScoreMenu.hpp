@@ -22,8 +22,8 @@ enum
 class ScoEventReceiver : public IEventReceiver
 {
 public:
-    ScoEventReceiver(SAppContextSco & context, IrrlichtDevice *_device, std::stack<IScene *> *_scenesStack, bool *_stop) 
-    : Context(context), device(_device), scenesStack(_scenesStack), stop(_stop) { }
+    ScoEventReceiver(SAppContextSco & context, IrrlichtDevice *_device, ISoundEngine *_engine, std::stack<IScene *> *_scenesStack, bool *_stop) 
+    : Context(context), device(_device), engine(_engine), scenesStack(_scenesStack), stop(_stop) { }
 
     virtual bool OnEvent(const SEvent& event)
     {
@@ -57,6 +57,7 @@ public:
 private:
     SAppContextSco          &Context;
     IrrlichtDevice          *device;
+    ISoundEngine            *engine;
     std::stack<IScene *>    *scenesStack;
     bool                    *stop;
 };
@@ -64,7 +65,7 @@ private:
 class ScoreMenu : public IScene {
 
 public:
-	ScoreMenu(IrrlichtDevice *, std::stack<IScene *> *);
+	ScoreMenu(IrrlichtDevice *, ISoundEngine *, std::stack<IScene *> *);
 	~ScoreMenu();
 
 	// Herited from IScene
@@ -77,12 +78,14 @@ public:
 	ISceneManager	*getSceneManager(void);
 	IGUIEnvironment	*getGUIEnv(void);
 	IVideoDriver	*getDriver(void);
+    ISoundEngine    *getSoundEngine(void);
     ScoEventReceiver *getEventReceiver(void);
 
 	void 			setDevice(IrrlichtDevice *);
 	void 			setSceneManager(ISceneManager *);
 	void 			setGUIEnv(IGUIEnvironment *);
 	void 			setDriver(IVideoDriver *);
+    void            setSoundEngine(ISoundEngine *);
     void            setEventReceiver(ScoEventReceiver *);
 
 	// Member methods
@@ -94,6 +97,7 @@ private:
 	ISceneManager			*sceneManager;
 	IGUIEnvironment			*guiEnv;
 	IVideoDriver 			*driver;
+    ISoundEngine            *soundEngine;
 	std::stack<IScene *> 	*scenesStack;
 
 	// Member variables

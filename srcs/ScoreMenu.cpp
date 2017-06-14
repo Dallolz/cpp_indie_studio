@@ -9,13 +9,14 @@
     Set the skin transparency by changing the alpha values of all skin-colors
 */
 
-ScoreMenu::ScoreMenu(IrrlichtDevice *device, std::stack<IScene *> *stack) { 
+ScoreMenu::ScoreMenu(IrrlichtDevice *device, ISoundEngine *sound, std::stack<IScene *> *stack) { 
 	this->device = device;
-	this->sceneManager = this->device->getSceneManager();
+    this->soundEngine = sound;
+    this->sceneManager = this->device->getSceneManager();
 	this->guiEnv = this->device->getGUIEnvironment();
 	this->driver = this->device->getVideoDriver();
 	this->scenesStack = stack;
-	this->stop = false;
+    this->stop = false;
 }
 
 ScoreMenu::~ScoreMenu() { }
@@ -24,12 +25,14 @@ IrrlichtDevice  *ScoreMenu::getDevice(void) { return (this->device); }
 ISceneManager	*ScoreMenu::getSceneManager(void) { return (this->sceneManager); }
 IGUIEnvironment	*ScoreMenu::getGUIEnv(void) { return (this->guiEnv); }
 IVideoDriver	*ScoreMenu::getDriver(void) { return (this->driver); }
+ISoundEngine    *ScoreMenu::getSoundEngine(void) { return (this->soundEngine); }
 ScoEventReceiver  *ScoreMenu::getEventReceiver(void) { return (this->eventReceiver); }
 
 void            ScoreMenu::setDevice(IrrlichtDevice *arg) { this->device = arg; }
 void 			ScoreMenu::setSceneManager(ISceneManager *arg) { this->sceneManager = arg; }
 void 			ScoreMenu::setGUIEnv(IGUIEnvironment *arg) { this->guiEnv = arg; }
 void 			ScoreMenu::setDriver(IVideoDriver *arg) { this->driver = arg; }
+void            ScoreMenu::setSoundEngine(ISoundEngine *arg) { this->soundEngine = arg; }
 void            ScoreMenu::setEventReceiver(ScoEventReceiver *arg) { this->eventReceiver = arg; }
 
 
@@ -81,7 +84,7 @@ void 	ScoreMenu::init(int *) {
     } else
         throw std::string(strerror(ENOMEM));
 
-    this->eventReceiver = new ScoEventReceiver(*context, this->device, this->scenesStack, &this->stop);
+    this->eventReceiver = new ScoEventReceiver(*context, this->device, this->soundEngine, this->scenesStack, &this->stop);
 
     if (this->eventReceiver)
         device->setEventReceiver(this->eventReceiver);

@@ -369,7 +369,7 @@ void  Gameplay::majPosMesh() {
       this->driver->endScene();
       sleep (5);
       if (isNewHighScore(0) && i > 0) {
-        NewHighScore *highscore = new NewHighScore(this->device,  this->scenesStack, this->device->getTimer()->getRealTime() - this->startTime);
+        NewHighScore *highscore = new NewHighScore(this->device, this->soundEngine, this->scenesStack, this->device->getTimer()->getRealTime() - this->startTime);
         scenesStack->push(highscore);
       }
       else

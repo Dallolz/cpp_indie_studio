@@ -9,12 +9,14 @@
     Set the skin transparency by changing the alpha values of all skin-colors
 */
 
-OptionsMenu::OptionsMenu(IrrlichtDevice *device,  std::stack<IScene *> *stack) { 
+OptionsMenu::OptionsMenu(IrrlichtDevice *device, ISoundEngine *sound, std::stack<IScene *> *stack) { 
 	this->device = device;
+    this->soundEngine = sound;
+    this->sceneManager = this->device->getSceneManager();
 	this->guiEnv = this->device->getGUIEnvironment();
 	this->driver = this->device->getVideoDriver();
 	this->scenesStack = stack;
-	this->stop = false;
+    this->stop = false;
 }
 
 OptionsMenu::~OptionsMenu() { }
@@ -23,12 +25,14 @@ IrrlichtDevice  *OptionsMenu::getDevice(void) { return (this->device); }
 ISceneManager	*OptionsMenu::getSceneManager(void) { return (this->sceneManager); }
 IGUIEnvironment	*OptionsMenu::getGUIEnv(void) { return (this->guiEnv); }
 IVideoDriver	*OptionsMenu::getDriver(void) { return (this->driver); }
+ISoundEngine    *OptionsMenu::getSoundEngine(void) { return (this->soundEngine); }
 OptEventReceiver  *OptionsMenu::getEventReceiver(void) { return (this->eventReceiver); }
 
 void            OptionsMenu::setDevice(IrrlichtDevice *arg) { this->device = arg; }
 void 			OptionsMenu::setSceneManager(ISceneManager *arg) { this->sceneManager = arg; }
 void 			OptionsMenu::setGUIEnv(IGUIEnvironment *arg) { this->guiEnv = arg; }
 void 			OptionsMenu::setDriver(IVideoDriver *arg) { this->driver = arg; }
+void            OptionsMenu::setSoundEngine(ISoundEngine *arg) { this->soundEngine = arg; }
 void            OptionsMenu::setEventReceiver(OptEventReceiver *arg) { this->eventReceiver = arg; }
 
 
@@ -56,6 +60,7 @@ void 	OptionsMenu::init(int *mapID) {
     guiEnv->addStaticText(L"MAP", rect<s32>(MID_WIDTH - 250, MID_HEIGHT - 220, MID_WIDTH + 250, MID_HEIGHT - 190), true);
     IGUIScrollBar* scrollbar = guiEnv->addScrollBar(true, rect<s32>(MID_WIDTH - 130, MID_HEIGHT - 300, MID_WIDTH + 250, MID_HEIGHT - 280), 0, GUI_ID_MUSIC_VOLUME);
     scrollbar->setMax(100);
+    scrollbar->setPos(soundEngine->getSoundVolume() * 100);
 
     guiEnv->addButton(rect<s32>(MID_WIDTH - 250, MID_HEIGHT + 200, MID_WIDTH + 250, MID_HEIGHT + 290), 0, GUI_ID_QUIT_BUTTON_OPT, L"BACK", L"Back to main menu");
 
@@ -73,7 +78,7 @@ void 	OptionsMenu::init(int *mapID) {
     } else
         throw std::string(strerror(ENOMEM));
 
-    this->eventReceiver = new OptEventReceiver(*context, this->device, this->scenesStack, &this->stop, mapID);
+    this->eventReceiver = new OptEventReceiver(*context, this->device, this->soundEngine, this->scenesStack, &this->stop, mapID);
 
     if (this->eventReceiver)
         device->setEventReceiver(this->eventReceiver);

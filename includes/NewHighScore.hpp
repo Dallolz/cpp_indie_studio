@@ -22,8 +22,8 @@ enum
 class NewScoEventReceiver : public IEventReceiver
 {
 public:
-    NewScoEventReceiver(SAppContextNewSco & context, IrrlichtDevice *_device, std::stack<IScene *> *_scenesStack, bool *_stop, IGUIEditBox *_input, vector<int> _score, vector<std::string> _pseudo, int _id, fstream *_file) 
-    : Context(context), device(_device), scenesStack(_scenesStack), stop(_stop), input(_input), score(_score), pseudo(_pseudo), pseudoid(_id) { }
+    NewScoEventReceiver(SAppContextNewSco & context, IrrlichtDevice *_device, ISoundEngine *_engine, std::stack<IScene *> *_scenesStack, bool *_stop, IGUIEditBox *_input, vector<int> _score, vector<std::string> _pseudo, int _id, fstream *_file) 
+    : Context(context), device(_device), engine(_engine), scenesStack(_scenesStack), stop(_stop), input(_input), score(_score), pseudo(_pseudo), file(_file), pseudoid(_id) { }
 
     int     cptSpace(std::string s) {
 
@@ -93,6 +93,7 @@ public:
 private:
     SAppContextNewSco       &Context;
     IrrlichtDevice          *device;
+    ISoundEngine            *engine;
     std::stack<IScene *>    *scenesStack;
     bool                    *stop;
     std::string             newpseudo;
@@ -106,7 +107,7 @@ private:
 class NewHighScore : public IScene {
 
 public:
-	NewHighScore(IrrlichtDevice *, std::stack<IScene *> *, int);
+	NewHighScore(IrrlichtDevice *, ISoundEngine *, std::stack<IScene *> *, int);
 	~NewHighScore();
 
 	// Herited from IScene
@@ -119,12 +120,14 @@ public:
 	ISceneManager	*getSceneManager(void);
 	IGUIEnvironment	*getGUIEnv(void);
 	IVideoDriver	*getDriver(void);
+    ISoundEngine    *getSoundEngine(void);
     NewScoEventReceiver *getEventReceiver(void);
 
 	void 			setDevice(IrrlichtDevice *);
 	void 			setSceneManager(ISceneManager *);
 	void 			setGUIEnv(IGUIEnvironment *);
 	void 			setDriver(IVideoDriver *);
+    void            setSoundEngine(ISoundEngine *);
     void            setEventReceiver(NewScoEventReceiver *);
 
 	// Member methods
@@ -136,6 +139,7 @@ private:
 	ISceneManager			*sceneManager;
 	IGUIEnvironment			*guiEnv;
 	IVideoDriver 			*driver;
+    ISoundEngine            *soundEngine;
 	std::stack<IScene *> 	*scenesStack;
 
 	// Member variables

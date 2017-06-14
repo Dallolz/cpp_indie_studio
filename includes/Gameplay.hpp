@@ -42,7 +42,7 @@ private:
 class Gameplay : public IScene {
 
 public:
-  Gameplay(IrrlichtDevice *, std::stack<IScene *> *);
+  Gameplay(IrrlichtDevice *, ISoundEngine	*, std::stack<IScene *> *);
   ~Gameplay();
   
   // Herited from IScene
@@ -55,6 +55,7 @@ public:
   ISceneManager		*getSceneManager(void);
   IGUIEnvironment	*getGUIEnv(void);
   IVideoDriver		*getDriver(void);
+  ISoundEngine		*getSoundEngine(void);
   GEventReceiver	*getEventReceiver(void);
   
   
@@ -62,6 +63,7 @@ public:
   void 			setSceneManager(ISceneManager *);
   void 			setGUIEnv(IGUIEnvironment *);
   void 			setDriver(IVideoDriver *);
+  void			setSoundEngine(ISoundEngine *);
   void 			setEventReceiver(GEventReceiver *);
   
   // Member methods
@@ -95,10 +97,12 @@ private:
   ISceneManager			*sceneManager;
   IGUIEnvironment		*guiEnv;
   IVideoDriver 			*driver;
+  ISoundEngine			*soundEngine;
   std::stack<IScene *>		*scenesStack;
   
   // Member variables
   
+  ISound                  *music_loop;
   GEventReceiver         *eventReceiver;
   std::vector<std::vector<Square> >     map;
   std::vector<std::vector<irr::scene::ISceneNode *>>	mapDraw;

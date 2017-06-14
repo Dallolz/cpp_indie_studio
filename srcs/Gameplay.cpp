@@ -10,12 +10,14 @@
     Set the skin transparency by changing the alpha values of all skin-colors
 */
 
-Gameplay::Gameplay(IrrlichtDevice *device, std::stack<IScene *> *stack) { 
+Gameplay::Gameplay(IrrlichtDevice *device, ISoundEngine *sound, std::stack<IScene *> *stack) { 
   this->device = device;
+  this->soundEngine = sound;
   this->sceneManager = this->device->getSceneManager();
   this->guiEnv = this->device->getGUIEnvironment();
   this->driver = this->device->getVideoDriver();
   this->scenesStack = stack;
+  this->music_loop = NULL;
 
   int   i;
 
@@ -43,12 +45,14 @@ IrrlichtDevice  *Gameplay::getDevice(void) { return (this->device); }
 ISceneManager	*Gameplay::getSceneManager(void) { return (this->sceneManager); }
 IGUIEnvironment	*Gameplay::getGUIEnv(void) { return (this->guiEnv); }
 IVideoDriver	*Gameplay::getDriver(void) { return (this->driver); }
+ISoundEngine    *Gameplay::getSoundEngine(void) { return (this->soundEngine); }
 GEventReceiver  *Gameplay::getEventReceiver(void) { return (this->eventReceiver); }
 
 void        Gameplay::setDevice(IrrlichtDevice *arg) { this->device = arg; }
 void        Gameplay::setSceneManager(ISceneManager *arg) { this->sceneManager = arg; }
 void        Gameplay::setGUIEnv(IGUIEnvironment *arg) { this->guiEnv = arg; }
 void        Gameplay::setDriver(IVideoDriver *arg) { this->driver = arg; }
+void        Gameplay::setSoundEngine(ISoundEngine *arg) { this->soundEngine = arg; }
 void        Gameplay::setEventReceiver(GEventReceiver *arg) { this->eventReceiver = arg; }
 
 
@@ -71,8 +75,7 @@ void 	Gameplay::setBGMusic(int mapID) {
 									"./assets/images/background_ocean.jpeg",
 									"./assets/images/background_volcano.jpg" };
 
-
-	//	this->music_loop = this->soundEngine->play2D(music[mapID], true, false, true);
+	this->music_loop = this->soundEngine->play2D(music[mapID], true, false, true);
 	this->background = bg[mapID];
 }
 
@@ -80,10 +83,10 @@ void 	Gameplay::init(int *mapID) {
 
     this->sceneManager->clear();
     this->guiEnv->clear();
-    //    this->soundEngine->stopAllSounds();
+    this->soundEngine->stopAllSounds();
 
-    //    if (!music_loop)
-    //    	setBGMusic(*mapID);
+    if (!music_loop)
+    	setBGMusic(*mapID);
 
     this->sceneManager->addCameraSceneNode(0,irr::core::vector3df(5.5f, -10.0f, 4.5f), irr::core::vector3df(5.5f, 0.0f, 4.6f), 0, true);
     if (this->eventReceiver = new GEventReceiver())

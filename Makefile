@@ -1,3 +1,13 @@
+##
+## Makefile for  in /home/lacroi_m/cpp_indie_studio/cpp_indie_studio
+## 
+## Made by Maxime Lacroix
+## Login   <lacroi_m@epitech.net>
+## 
+## Started on  Wed Jun 14 18:29:32 2017 Maxime Lacroix
+## Last update Wed Jun 14 18:52:25 2017 Maxime Lacroix
+##
+
 BIN 		= BomberMan
 
 SRCS_FILES 	= main.cpp \
@@ -16,15 +26,15 @@ SRCS_FILES 	= main.cpp \
 		  OptionsMenu.cpp \
 		  ScoreMenu.cpp \
 		  Square.cpp \
-		  utils.cpp \
+		  utils.cpp 
 
 SRCS 		= $(addprefix srcs/,$(SRCS_FILES))
 OBJS 		= $(SRCS:.cpp=.o)
 
 # general compiler settings
-CPPFLAGS = -Wl,-rpath=./includes/lib/ -I/usr/X11R6/include -Iincludes -Iincludes/irrlicht_includes -std=gnu++11 -lpthread 
+CPPFLAGS = -Wl,-rpath=./includes/lib/ -I/usr/X11R6/include -Iincludes -Iincludes/irrlicht_includes -Iincludes/irrklang_includes -std=gnu++11 -lpthread 
 
-CXXFLAGS = -O3 -ffast-math -lIrrlicht  -lGL -lGLU 
+CXXFLAGS = -O3 -ffast-math -lIrrlicht -lIrrKlang -lGL -lGLU
 
 all: all_linux
 
@@ -32,7 +42,7 @@ ifeq ($(HOSTTYPE), x86_64)
 LIBSELECT=64
 endif
 
-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L./includes/lib/ -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXcursor 
+all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L./includes/lib/ -lIrrlicht -lIrrKlang -lGL -lXxf86vm -lXext -lX11 -lXcursor
 
 all_linux clean_linux: SYSTEM=Linux
 
@@ -54,9 +64,6 @@ all_linux all_win32 static_win32: $(OBJS)
 		$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OBJS) -o $(DESTPATH) $(LDFLAGS)
 
 re: fclean all
-
-hugo:
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) Backup/Hugo/hugo.cpp -o Backup/hugo -L/usr/X11R6/lib -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXcursor
 
 clean: clean_linux clean_win32
 	$(warning Cleaning...)

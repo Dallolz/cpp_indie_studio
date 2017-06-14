@@ -17,11 +17,15 @@ bool 	GameManager::initGame() {
 	}
 	device->setResizable(false);
 
+	if (!(soundEngine = createIrrKlangDevice())) {
+		throw std::string(ERR_GM_ENGINE);
+		return (false);
+	}
 
     this->device->setWindowCaption(getStringw(GAME_NAME).c_str());
 
     // on init la stack avec le menu principal
-    MainMenu *mainMenu = new MainMenu(this->device, &scenesStack);
+    MainMenu *mainMenu = new MainMenu(this->device, this->soundEngine, &scenesStack);
     scenesStack.push(mainMenu);
 
     return (true);
@@ -29,6 +33,7 @@ bool 	GameManager::initGame() {
 
 void 	GameManager::clear() { 
 	this->device->drop();
+	this->soundEngine->drop();
 
 	int size = scenesStack.size();
 

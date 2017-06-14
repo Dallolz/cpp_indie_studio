@@ -20,8 +20,8 @@ enum
 class OptEventReceiver : public IEventReceiver
 {
 public:
-    OptEventReceiver(SAppContextOpt & context, IrrlichtDevice *_device,  std::stack<IScene *> *_scenesStack, bool *_stop, int *_mapID) 
-    : Context(context), device(_device), scenesStack(_scenesStack), stop(_stop), mapID(_mapID) { }
+    OptEventReceiver(SAppContextOpt & context, IrrlichtDevice *_device, ISoundEngine *_engine, std::stack<IScene *> *_scenesStack, bool *_stop, int *_mapID) 
+    : Context(context), device(_device), engine(_engine), scenesStack(_scenesStack), stop(_stop), mapID(_mapID) { }
 
     virtual bool OnEvent(const SEvent& event)
     {
@@ -49,6 +49,7 @@ public:
                 {
                     s32 pos = ((IGUIScrollBar*)event.GUIEvent.Caller)->getPos();
                     float volume = (float)pos / (float)100;
+                    engine->setSoundVolume(volume);
                 }
                 break;
 
@@ -68,6 +69,7 @@ public:
 private:
     SAppContextOpt          &Context;
     IrrlichtDevice          *device;
+    ISoundEngine            *engine;
     std::stack<IScene *>    *scenesStack;
     bool                    *stop;
     int                     *mapID;
@@ -76,7 +78,7 @@ private:
 class OptionsMenu : public IScene {
 
 public:
-	OptionsMenu(IrrlichtDevice *, std::stack<IScene *> *);
+	OptionsMenu(IrrlichtDevice *, ISoundEngine *, std::stack<IScene *> *);
 	~OptionsMenu();
 
 	// Herited from IScene
@@ -89,12 +91,14 @@ public:
 	ISceneManager	*getSceneManager(void);
 	IGUIEnvironment	*getGUIEnv(void);
 	IVideoDriver	*getDriver(void);
+    ISoundEngine    *getSoundEngine(void);
     OptEventReceiver *getEventReceiver(void);
 
 	void 			setDevice(IrrlichtDevice *);
 	void 			setSceneManager(ISceneManager *);
 	void 			setGUIEnv(IGUIEnvironment *);
 	void 			setDriver(IVideoDriver *);
+    void            setSoundEngine(ISoundEngine *);
     void            setEventReceiver(OptEventReceiver *);
 
 	// Member methods
@@ -106,6 +110,7 @@ private:
 	ISceneManager			*sceneManager;
 	IGUIEnvironment			*guiEnv;
 	IVideoDriver 			*driver;
+    ISoundEngine            *soundEngine;
 	std::stack<IScene *> 	*scenesStack;
 
 	// Member variables

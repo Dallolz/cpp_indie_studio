@@ -22,8 +22,8 @@ enum
 class CGEventReceiver : public IEventReceiver
 {
 public:
-    CGEventReceiver(SAppContextCG & context, IrrlichtDevice *_device, std::stack<IScene *> *_scenesStack, bool *_stop, vector<Character *> *_charList, Gameplay *_gameplay) 
-    : Context(context), device(_device), scenesStack(_scenesStack), stop(_stop), charList(_charList), gameplay(_gameplay) { }
+    CGEventReceiver(SAppContextCG & context, IrrlichtDevice *_device, ISoundEngine *_engine, std::stack<IScene *> *_scenesStack, bool *_stop, vector<Character *> *_charList, Gameplay *_gameplay) 
+    : Context(context), device(_device), engine(_engine), scenesStack(_scenesStack), stop(_stop), charList(_charList), gameplay(_gameplay) { }
 
     int         countBot() {
         int     i = 0;
@@ -135,6 +135,7 @@ public:
 private:
     SAppContextCG           &Context;
     IrrlichtDevice          *device;
+    ISoundEngine            *engine;
     std::stack<IScene *>    *scenesStack;
     bool                    *stop;
     vector<Character *>     *charList;
@@ -145,7 +146,7 @@ private:
 class CreateGame : public IScene {
 
 public:
-	CreateGame(IrrlichtDevice *, std::stack<IScene *> *);
+	CreateGame(IrrlichtDevice *, ISoundEngine *, std::stack<IScene *> *);
 	~CreateGame();
 
 	// Herited from IScene
@@ -158,12 +159,14 @@ public:
 	ISceneManager	*getSceneManager(void);
 	IGUIEnvironment	*getGUIEnv(void);
 	IVideoDriver	*getDriver(void);
+    ISoundEngine    *getSoundEngine(void);
     CGEventReceiver *getEventReceiver(void);
 
 	void 			setDevice(IrrlichtDevice *);
 	void 			setSceneManager(ISceneManager *);
 	void 			setGUIEnv(IGUIEnvironment *);
 	void 			setDriver(IVideoDriver *);
+    void            setSoundEngine(ISoundEngine *);
     void            setEventReceiver(CGEventReceiver *);
 
 	// Member methods
@@ -177,6 +180,7 @@ private:
 	ISceneManager			*sceneManager;
 	IGUIEnvironment			*guiEnv;
 	IVideoDriver 			*driver;
+    ISoundEngine            *soundEngine;
 	stack<IScene *> 	    *scenesStack;
 
 	// Member variables
